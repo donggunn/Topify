@@ -10,6 +10,7 @@ class FontAwesomeIcons {
   static const IconData question = const _IconDataSolid(0xf128);
   static const IconData list_ol = const _IconDataRegular(0xf0cb);
   static const IconData user = const _IconDataSolid(0xf007);
+  static const IconData cog = const _IconDataSolid(0xf013);
 }
 
 class _IconDataBrands extends IconData {
