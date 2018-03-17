@@ -142,11 +142,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           key: key,
           appBar: new AppBar(
             title: new Text(widget.title,
-                style: const TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.w500)),
-          ),
+                style: AppTextStyles.title)),
           bottomNavigationBar: new Material(
               color: Theme.of(context).primaryColor,
               child: new TabBar(
@@ -239,9 +235,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                         leading: new CircleAvatar(
                                             child: new Icon(
                                           FontAwesomeIcons.cog,
-                                          color: applyDarkTheme
-                                              ? Colors.green
-                                              : Colors.white,
+                                          color: themeData.backgroundColor
                                         )),
                                         title: new Text(
                                           'הגדרות',

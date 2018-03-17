@@ -11,6 +11,8 @@ class FontAwesomeIcons {
   static const IconData list_ol = const _IconDataRegular(0xf0cb);
   static const IconData user = const _IconDataSolid(0xf007);
   static const IconData cog = const _IconDataSolid(0xf013);
+  static const IconData sun = const _IconDataSolid(0xf185);
+  static const IconData moon = const _IconDataSolid(0xf186);
 }
 
 class _IconDataBrands extends IconData {

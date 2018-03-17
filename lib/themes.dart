@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_playlists/font_awesome_icon_data.dart';
 
 class AppThemes {
   const AppThemes({ this.name, this.icon, this.theme });
@@ -27,25 +28,29 @@ const MaterialColor _kPurpleSwatch = const MaterialColor(
 final List<AppThemes> kAllAppThemes = <AppThemes>[
   new AppThemes(
     name: 'בהיר',
-    icon: Icons.brightness_5,
+    icon: FontAwesomeIcons.sun,
     theme: new ThemeData(
-      primarySwatch: Colors.green,
+      primaryColor: Colors.green,
       backgroundColor: Colors.white,
       brightness: Brightness.light,
       highlightColor: Colors.black12,
       accentColor: Colors.green,
+      splashColor: Colors.green[100],
+      splashFactory: InkRipple.splashFactory,
       dividerColor: Colors.green,
     ),
   ),
   new AppThemes(
     name: 'חשוך',
-    icon: Icons.brightness_7,
+    icon: FontAwesomeIcons.moon,
     theme: new ThemeData(
-      primarySwatch: Colors.lightGreen,
+      primaryColor: Colors.lightGreen,
       backgroundColor: Colors.black87,
       brightness: Brightness.dark,
       highlightColor: Colors.white12,
       accentColor: Colors.green,
+      splashColor: Colors.lightGreen[900],
+      splashFactory: InkRipple.splashFactory,
     ),
   ),
   new AppThemes(
@@ -53,7 +58,8 @@ final List<AppThemes> kAllAppThemes = <AppThemes>[
     icon: Icons.brightness_6,
     theme: new ThemeData(
       brightness: Brightness.light,
-      primarySwatch: _kPurpleSwatch,
+      primaryColor: _kPurpleSwatch,
+      backgroundColor: Colors.white,
       buttonColor: _kPurpleSwatch[500],
       splashColor: Colors.white24,
       splashFactory: InkRipple.splashFactory,
