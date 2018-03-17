@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify_playlists/settings.dart';
 import 'package:spotify_playlists/text_styles.dart';
@@ -8,26 +9,49 @@ import './playlists_my.dart' as playlists_my;
 
 void main() => runApp(new MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => new MyAppState();
+}
+
+class MyAppState extends State<MyApp> {
+  AppThemes _appTheme = kAllAppThemes[0];
+
   @override
   Widget build(BuildContext context) {
-    var _routes = <String, WidgetBuilder> {
-      SettingsPage.routeName : (BuildContext context) => new SettingsPage(title: 'הגדרות',),
-    };
+    Widget home = new MyHomePage(
+      title: 'להלהלה',
+      appTheme: _appTheme,
+      onThemeChanged: (AppThemes value) {
+        setState(() {
+          _appTheme = value;
+        });
+      },
+    );
 
     return new MaterialApp(
-      title: 'ספוטיפיי',
-      home: new MyHomePage(title: 'רשימות ההשמעה המובילות'),
-      routes: _routes,
-      theme: AppThemes.dark,
+      home: home,
+      theme: _appTheme.theme,
+      routes: <String, WidgetBuilder>{
+        SettingsPage.routeName : (BuildContext context) => new SettingsPage(title: 'הגדרות',appTheme: _appTheme,onThemeChanged: (AppThemes value) {
+          setState(() {
+            _appTheme = value;
+          });
+        } ,)
+      },
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage(
+      {Key key, this.title, this.appTheme, @required this.onThemeChanged})
+      : assert(onThemeChanged != null),
+        super(key: key);
 
   final String title;
+  final AppThemes appTheme;
+  final ValueChanged<AppThemes> onThemeChanged;
 
   @override
   _MyHomePageState createState() => new _MyHomePageState();
@@ -104,100 +128,102 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       _showDrawerContents = true;
       _controller.reverse();
     });
-    key.currentState
-        .showSnackBar(new SnackBar(content: new Text('ברוך הבא!')));
+    key.currentState.showSnackBar(new SnackBar(content: new Text('ברוך הבא!')));
   }
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
+
     return new Directionality(
         textDirection: TextDirection.rtl,
         child: new Scaffold(
-              backgroundColor: Theme.of(context).backgroundColor,
-              key: key,
-              appBar: new AppBar(
-                title: new Text(widget.title,
-                    style: const TextStyle(
-                        fontFamily: 'Rubik',
-                        fontSize: 25.0,
-                        fontWeight: FontWeight.w500)),
-              ),
-              bottomNavigationBar: new Material(
-                  color: Theme.of(context).primaryColor,
-                  child: new TabBar(indicatorColor: Theme.of(context).backgroundColor,
-                    tabs: <Tab>[
-                      new Tab(icon: new Icon(FontAwesomeIcons.list_ol)),
-                      new Tab(icon: new Icon(FontAwesomeIcons.user_circle)),
-                    ],
-                    controller: _tabController,
-                  )),
-              drawer: new Drawer(
-                child: new Column(
-                  children: <Widget>[
-                    _isLogged
-                        ? new UserAccountsDrawerHeader(
-                            accountName: const Text(
-                              'צחי ארגמן',
-                              style: AppTextStyles.regular,
-                            ),
-                            accountEmail: const Text(
-                              'argamanza@gmail.com',
-                              style: AppTextStyles.regular,
-                            ),
-                            currentAccountPicture: const CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage: null,
-                            ),
-                            margin: EdgeInsets.zero,
-                            onDetailsPressed: () {
-                              _showDrawerContents = !_showDrawerContents;
-                              if (_showDrawerContents)
-                                _controller.reverse();
-                              else
-                                _controller.forward();
-                            },
-                          )
-                        : new UserAccountsDrawerHeader(
-                            accountName: const Text(
-                              'משתמש אנונימי',
-                              style: AppTextStyles.regular,
-                            ),
-                            accountEmail: const Text(''),
-                            currentAccountPicture: const CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child: const Icon(
-                                FontAwesomeIcons.question,
-                                size: 45.0,
-                                color: Colors.green,
-                              ),
-                            ),
-                            margin: EdgeInsets.zero,
-                            onDetailsPressed: () {
-                              _showDrawerContents = !_showDrawerContents;
-                              if (_showDrawerContents)
-                                _controller.reverse();
-                              else
-                                _controller.forward();
-                            },
+          backgroundColor: themeData.backgroundColor,
+          key: key,
+          appBar: new AppBar(
+            title: new Text(widget.title,
+                style: const TextStyle(
+                    fontFamily: 'Rubik',
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w500)),
+          ),
+          bottomNavigationBar: new Material(
+              color: Theme.of(context).primaryColor,
+              child: new TabBar(
+                indicatorColor: Theme.of(context).backgroundColor,
+                tabs: <Tab>[
+                  new Tab(icon: new Icon(FontAwesomeIcons.list_ol)),
+                  new Tab(icon: new Icon(FontAwesomeIcons.user_circle)),
+                ],
+                controller: _tabController,
+              )),
+          drawer: new Drawer(
+            child: new Column(
+              children: <Widget>[
+                _isLogged
+                    ? new UserAccountsDrawerHeader(
+                        accountName: const Text(
+                          'צחי ארגמן',
+                          style: AppTextStyles.regular,
+                        ),
+                        accountEmail: const Text(
+                          'argamanza@gmail.com',
+                          style: AppTextStyles.regular,
+                        ),
+                        currentAccountPicture: const CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: null,
+                        ),
+                        margin: EdgeInsets.zero,
+                        onDetailsPressed: () {
+                          _showDrawerContents = !_showDrawerContents;
+                          if (_showDrawerContents)
+                            _controller.reverse();
+                          else
+                            _controller.forward();
+                        },
+                      )
+                    : new UserAccountsDrawerHeader(
+                        accountName: const Text(
+                          'משתמש אנונימי',
+                          style: AppTextStyles.regular,
+                        ),
+                        accountEmail: const Text(''),
+                        currentAccountPicture: const CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: const Icon(
+                            FontAwesomeIcons.question,
+                            size: 45.0,
+                            color: Colors.green,
                           ),
-                    new MediaQuery.removePadding(
-                      context: context,
-                      // DrawerHeader consumes top MediaQuery padding.
-                      removeTop: true,
-                      child: new Expanded(
-                        child: new ListView(
-                          padding: const EdgeInsets.only(top: 8.0),
+                        ),
+                        margin: EdgeInsets.zero,
+                        onDetailsPressed: () {
+                          _showDrawerContents = !_showDrawerContents;
+                          if (_showDrawerContents)
+                            _controller.reverse();
+                          else
+                            _controller.forward();
+                        },
+                      ),
+                new MediaQuery.removePadding(
+                  context: context,
+                  // DrawerHeader consumes top MediaQuery padding.
+                  removeTop: true,
+                  child: new Expanded(
+                    child: new ListView(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      children: <Widget>[
+                        new Stack(
                           children: <Widget>[
-                            new Stack(
-                              children: <Widget>[
-                                // The initial contents of the drawer.
-                                new FadeTransition(
-                                  opacity: _drawerContentsOpacity,
-                                  child: new Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: <Widget>[] + (_drawerContents.map((String id) {
+                            // The initial contents of the drawer.
+                            new FadeTransition(
+                              opacity: _drawerContentsOpacity,
+                              child: new Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[] +
+                                    (_drawerContents.map((String id) {
                                       return new ListTile(
                                         leading: new CircleAvatar(
                                             child: new Text(id)),
@@ -207,79 +233,85 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                         ),
                                         onTap: _showNotImplementedMessage,
                                       );
-                                    }).toList()) + <ListTile>[new ListTile(
-                                      leading: new CircleAvatar(
-                                          child: new Icon(FontAwesomeIcons.cog,color: applyDarkTheme ? Colors.green : Colors.white,)),
-                                      title: new Text(
-                                        'הגדרות',
-                                        style: AppTextStyles.drawerItem,
-                                      ),
-                                      onTap: (){
-                                        Navigator.pushNamed(context, SettingsPage.routeName);
-                                      },
-                                    )],
-                                  ),
+                                    }).toList()) +
+                                    <ListTile>[
+                                      new ListTile(
+                                        leading: new CircleAvatar(
+                                            child: new Icon(
+                                          FontAwesomeIcons.cog,
+                                          color: applyDarkTheme
+                                              ? Colors.green
+                                              : Colors.white,
+                                        )),
+                                        title: new Text(
+                                          'הגדרות',
+                                          style: AppTextStyles.drawerItem,
+                                        ),
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                              context, SettingsPage.routeName);
+                                        },
+                                      )
+                                    ],
+                              ),
+                            ),
+                            // The drawer's "details" view.
+                            new SlideTransition(
+                              position: _drawerDetailsPosition,
+                              child: new FadeTransition(
+                                opacity: new ReverseAnimation(
+                                    _drawerContentsOpacity),
+                                child: new Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: _isLogged
+                                      ? <Widget>[
+                                          new ListTile(
+                                            leading: const Icon(Icons.add),
+                                            title: const Text('Add account'),
+                                            onTap: _showNotImplementedMessage,
+                                          ),
+                                          new ListTile(
+                                            leading: const Icon(
+                                                FontAwesomeIcons.sign_out),
+                                            title: const Text(
+                                              'התנתק',
+                                              style: AppTextStyles.regular,
+                                            ),
+                                            onTap: _logOut,
+                                          ),
+                                        ]
+                                      : <Widget>[
+                                          new ListTile(
+                                            leading: const Icon(
+                                                FontAwesomeIcons.sign_in),
+                                            title: const Text(
+                                              'התחבר',
+                                              style: AppTextStyles.regular,
+                                            ),
+                                            onTap: _logIn,
+                                          ),
+                                        ],
                                 ),
-                                // The drawer's "details" view.
-                                new SlideTransition(
-                                  position: _drawerDetailsPosition,
-                                  child: new FadeTransition(
-                                    opacity: new ReverseAnimation(
-                                        _drawerContentsOpacity),
-                                    child: new Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: _isLogged
-                                          ? <Widget>[
-                                              new ListTile(
-                                                leading: const Icon(Icons.add),
-                                                title:
-                                                    const Text('Add account'),
-                                                onTap:
-                                                    _showNotImplementedMessage,
-                                              ),
-                                              new ListTile(
-                                                leading: const Icon(
-                                                    FontAwesomeIcons.sign_out),
-                                                title: const Text(
-                                                  'התנתק',
-                                                  style: AppTextStyles.regular,
-                                                ),
-                                                onTap: _logOut,
-                                              ),
-                                            ]
-                                          : <Widget>[
-                                              new ListTile(
-                                                leading: const Icon(
-                                                    FontAwesomeIcons.sign_in),
-                                                title: const Text(
-                                                  'התחבר',
-                                                  style: AppTextStyles.regular,
-                                                ),
-                                                onTap:
-                                                    _logIn,
-                                              ),
-                                            ],
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-              body: new TabBarView(
-                children: <Widget>[
-                  new playlists_top.PlaylistsTop(),
-                  new playlists_my.PlaylistsMy()
-                ],
-                controller: _tabController,
-              ),
-            ));
+              ],
+            ),
+          ),
+          body: new TabBarView(
+            children: <Widget>[
+              new playlists_top.PlaylistsTop(),
+              new playlists_my.PlaylistsMy()
+            ],
+            controller: _tabController,
+          ),
+        ));
   }
 }
