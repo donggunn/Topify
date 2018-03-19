@@ -17,10 +17,13 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   AppThemes _appTheme = kAllAppThemes[0];
 
+  // TODO: translate and edit
+  final String description = 'רשימות השמעה לספוטיפיי';
+
   @override
   Widget build(BuildContext context) {
     Widget home = new MyHomePage(
-      title: 'להלהלה',
+      title: 'רשימות השמעה',
       appTheme: _appTheme,
       onThemeChanged: (AppThemes value) {
         setState(() {
@@ -30,6 +33,7 @@ class MyAppState extends State<MyApp> {
     );
 
     return new MaterialApp(
+      title: 'Topify - $description',
       home: home,
       theme: _appTheme.theme,
       routes: <String, WidgetBuilder>{
